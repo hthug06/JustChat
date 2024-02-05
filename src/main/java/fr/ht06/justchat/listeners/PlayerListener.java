@@ -18,6 +18,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import me.clip.placeholderapi.*;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.inventory.InventoryInteractEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.jetbrains.annotations.NotNull;
 
@@ -39,8 +40,8 @@ public class PlayerListener implements Listener {
 
         MiniMessage miniMessage = MiniMessage.miniMessage();
 
-        @NotNull Component PrefixReplacer= miniMessage.deserialize(prefix);
-        @NotNull Component SuffixReplacer= miniMessage.deserialize(suffix);
+        @NotNull Component PrefixReplacer = miniMessage.deserialize(prefix);
+        @NotNull Component SuffixReplacer = miniMessage.deserialize(suffix);
 
         TextComponent message = Component.text("")
                 .append(PrefixReplacer)
@@ -57,6 +58,12 @@ public class PlayerListener implements Listener {
         else {
             Bukkit.broadcast(message.append(event.message()));
         }
+    }
+
+
+    @EventHandler
+    public void onInteractInventory(InventoryInteractEvent event){
+
     }
 
 }

@@ -6,5 +6,6 @@ author: ht06
 # This sets PlaceholderAPI as a dependency for your plugin.
 depend: [PlaceholderAPI]
 commands:
-  test:
-    description: test
+  justchat:
+    description: a help command for the plugin JustChat
+
