@@ -1,0 +1,10 @@
+name: JustChat
+version: '${version}'
+main: fr.ht06.justchat.Main
+api-version: '1.20'
+author: ht06
+# This sets PlaceholderAPI as a dependency for your plugin.
+depend: [PlaceholderAPI]
+commands:
+  test:
+    description: test
