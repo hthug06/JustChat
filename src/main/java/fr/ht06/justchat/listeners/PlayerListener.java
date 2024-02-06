@@ -12,14 +12,19 @@ import net.kyori.adventure.text.minimessage.tag.resolver.Formatter;
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
+import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import me.clip.placeholderapi.*;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryInteractEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -62,8 +67,17 @@ public class PlayerListener implements Listener {
 
 
     @EventHandler
-    public void onInteractInventory(InventoryInteractEvent event){
+    public void onInteractInventory(InventoryClickEvent event){
+        Inventory inv = event.getInventory();
+        Player player = (Player) event.getWhoClicked();
+        ItemStack item = event.getCurrentItem();
 
+        if (item == null) return;
+
+        if (item.getType().name().equals("COLORS")){
+            inv.close();
+            player.sendMessage(MiniMessage.miniMessage().deserialize("<blue>This is blue</blue><yellow>And i'm yellow</yellow><#EB984E>WOW NOICE COLOR"));
+        }
     }
 
 }
