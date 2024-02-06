@@ -53,6 +53,7 @@ processResources {
     }
 }
 
-setLibsDirName("../GeneratedFiles")
+//setLibsDirName("../GeneratedFiles")
+setLibsDirName("../server/plugins")
 compileJava.options.encoding("UTF-8")
 
