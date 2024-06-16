@@ -1,5 +1,7 @@
 package fr.ht06.justchat.listeners;
 
+import fr.ht06.justchat.Main;
+import fr.ht06.justchat.commands.JustChatCommand;
 import io.papermc.paper.chat.ChatRenderer;
 import io.papermc.paper.event.player.AsyncChatEvent;
 import net.kyori.adventure.audience.Audience;
@@ -22,21 +24,33 @@ import org.bukkit.event.Listener;
 import me.clip.placeholderapi.*;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryInteractEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Random;
+import java.util.*;
 
 public class PlayerListener implements Listener {
 
+    Main main;
+    JustChatCommand justChatCommand;
+    BukkitRunnable bukkitRunnable;
+    public Map<Player, Boolean> inventoryOpen = new HashMap<>();
+    public PlayerListener(Main main) {
+        this.main = main;
+    }
+    public PlayerListener(JustChatCommand justChatCommand) {
+        this.justChatCommand = justChatCommand;
+    }
+    public PlayerListener(BukkitRunnable main) {
+        this.bukkitRunnable = main;
+    }
 
     @EventHandler
     public void playerPrefix(AsyncChatEvent event){
@@ -46,17 +60,58 @@ public class PlayerListener implements Listener {
         }*/
 
         Player player = event.getPlayer();
-        String prefix = PlaceholderAPI.setPlaceholders(player, "%luckperms_prefix%") + player.getName();
-        String suffix = PlaceholderAPI.setPlaceholders(player, "%luckperms_suffix%");
+        //String prefix = "["+PlaceholderAPI.setPlaceholders(player, "%justskyblock_test%")+"]";
+        //prefix += PlaceholderAPI.setPlaceholders(player, "%luckperms_prefix%") + player.getName();
+        //String suffix = PlaceholderAPI.setPlaceholders(player, "%luckperms_suffix%");
+
+        StringBuilder message1 = new StringBuilder();
+
+        List<String> list = new ArrayList<>();
+        int i = 0;
+        String[] msgconfig = main.getConfig().getString("Message").split(" ");
+
+        for (String s : msgconfig){
+            if (s.equals("(PLAYER)")){
+                if (msgconfig.length-1 == i) message1.append(player.getName());
+                else message1.append(player.getName() + " ");
+
+                i++;
+
+            }
+            //si placeHolder
+            else if (PlaceholderAPI.containsPlaceholders(s)) {
+
+                message1.append(PlaceholderAPI.setPlaceholders(player, s));
+
+                i++;
+
+            } else {
+                if (msgconfig.length-1 == i) message1.append(s);
+                else  message1.append(s +  " ");
+
+
+                player.sendMessage(String.valueOf(i));
+
+                i++;
+            }
+
+        }
+
+
 
         MiniMessage miniMessage = MiniMessage.miniMessage();
 
-        @NotNull Component PrefixReplacer = miniMessage.deserialize(prefix);
-        @NotNull Component SuffixReplacer = miniMessage.deserialize(suffix);
+        //@NotNull Component PrefixReplacer = miniMessage.deserialize(prefix);
+        //@NotNull Component SuffixReplacer = miniMessage.deserialize(suffix);
+        @NotNull Component MessageReplacer = miniMessage.deserialize(message1.toString());
 
-        TextComponent message = Component.text("")
+        /*TextComponent message = Component.text("")
                 .append(PrefixReplacer)
                 .append(SuffixReplacer)
+                .append(Component.text(": "));*/
+
+        TextComponent message = Component.text("")
+                .append(MessageReplacer)
                 .append(Component.text(": "));
 
         event.setCancelled(true);
@@ -89,20 +144,28 @@ public class PlayerListener implements Listener {
             }
         }
 
-
         if (item == null) return;
 
         Component component = Component.text("Just").color(TextColor.color(0xA05FB9))
                 .append(Component.text("Chat").color(TextColor.color(0x3E95CE)))
                 .append(Component.text(" example").color(TextColor.color(0x808B96)));
-        inventoryView.getItem(10).setType(woolMaterials.get(random.nextInt(woolMaterials.size())));
         if (inventoryView.title().equals(component)){
-            event.setCancelled(true);
+
             if (woolMaterials.contains(item.getType())){
-                player.sendMessage(miniMessage.deserialize("<blue>This<red> is<yellow> a<green> colored<light_purple> text,<#F2D7D5> it's<#212F3C> FUN "));
+                event.setCancelled(true);
+                player.sendMessage(miniMessage.deserialize("<blue>This<red> is<yellow> a<green> colored<light_purple> text,<#F2D7D5> it's<#212F3C> FUN, ")
+                        .append(miniMessage.deserialize("<rainbow>and its a rainbow text, also fun"))
+
+                );
             }
         }
+    }
 
+    @EventHandler
+    public void onCloseInv(InventoryCloseEvent event){
+        Player player = (Player) event.getPlayer();
+        main.inventoryClosed.put(player, false);
+        //player.sendMessage(player.getName() + " à fermé l'inv");
     }
 
 }

@@ -23,16 +23,21 @@ import me.clip.placeholderapi.*;
 
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-public final class Main extends JavaPlugin {
+public class Main extends JavaPlugin {
+
+    public Map<Player, Boolean> inventoryClosed = new HashMap<>();
 
     @Override
     public void onEnable() {
         getCommand("justChat").setExecutor(new JustChatCommand(this));
         getCommand("justChat").setTabCompleter(new JustChatTab());
-        getServer().getPluginManager().registerEvents(new PlayerListener(), this);
+        getServer().getPluginManager().registerEvents(new PlayerListener(this), this);
 
+        saveDefaultConfig();
     }
 
     @Override
