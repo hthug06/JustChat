@@ -10,8 +10,6 @@ public class JustChat extends JavaPlugin {
 
     @Override
     public void onEnable() {
-
-//        for placeholderAPI: if( Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI"))
         //Commands
         getCommand("justChat").setExecutor(new JustChatCommand());
 
@@ -19,7 +17,7 @@ public class JustChat extends JavaPlugin {
         getCommand("justChat").setTabCompleter(new JustChatTab());
 
         //events
-        getServer().getPluginManager().registerEvents(new PlayerListener(this), this);
+        getServer().getPluginManager().registerEvents(new PlayerListener(), this);
         getServer().getPluginManager().registerEvents(new ExampleInventory(true), this);
 
         saveDefaultConfig();

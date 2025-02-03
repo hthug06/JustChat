@@ -1,5 +1,6 @@
 package fr.ht06.justchat.commands;
 
+import fr.ht06.justchat.JustChat;
 import fr.ht06.justchat.inventory.ExampleInventory;
 import net.kyori.adventure.text.Component;
 import org.bukkit.command.Command;
@@ -21,7 +22,13 @@ public class JustChatCommand implements CommandExecutor {
 
         //no args
         if (args.length == 0) {
-            player.sendMessage(Component.text("§c/justchat example"));
+            if (player.hasPermission("justchat.reload")) {
+                player.sendMessage(Component.text("§c/justchat <example | reload>"));
+            }
+            else{
+                player.sendMessage(Component.text("§c/justchat example"));
+            }
+
             return true;
         }
 
@@ -29,6 +36,18 @@ public class JustChatCommand implements CommandExecutor {
         else {
             if (args[0].equalsIgnoreCase("example")) {
                 player.openInventory(new ExampleInventory(false).getInventory());
+            }
+            else if (args[0].equalsIgnoreCase("reload") && player.hasPermission("justchat.reload")) {
+                JustChat.getInstance().reloadConfig();
+                player.sendMessage("Config reloaded");
+            }
+            else {
+                if (player.hasPermission("justchat.reload")) {
+                    player.sendMessage(Component.text("§c/justchat <example | reload>"));
+                }
+                else{
+                    player.sendMessage(Component.text("§c/justchat example"));
+                }
             }
         }
         return true;

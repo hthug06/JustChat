@@ -14,7 +14,9 @@ public class JustChatTab implements TabCompleter {
     public @Nullable List<String> onTabComplete(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String[] strings) {
         List<String> list = new ArrayList<>();
         list.add("example");
-        list.add("reload");
+        if (commandSender.isOp()) {
+            list.add("reload");
+        }
         return list;
     }
 }

@@ -46,23 +46,13 @@ public class ExampleInventory implements InventoryHolder, Listener {
         blockDecoration();
 
         //Another cool thing
-        List<Component> lore = new ArrayList<>();
-        lore.add(miniMessage.deserialize("<white><shadow:red:1>Use <shadow:blue:1>Shadow <shadow:green:1>color <shadow:yellow:1>!!!").decoration(TextDecoration.ITALIC, false));
-        lore.add(Component.text("Use <shadow:_colorNameOrHex_:[alpha_as_float]>", NamedTextColor.GRAY).decoration(TextDecoration.ITALIC, false));
-        lore.add(Component.text("(or just <shadow:colorName:1>)", NamedTextColor.GRAY).decoration(TextDecoration.ITALIC, false));
-        lore.add(Component.text(""));
-        lore.add(miniMessage.deserialize("<pride:pride>Pride flag colors").decoration(TextDecoration.ITALIC, false));
-        lore.add(miniMessage.deserialize("<pride:gay>Gay flag colors").decoration(TextDecoration.ITALIC, false));
-        lore.add(miniMessage.deserialize("<pride:lesbian>Lesbian flag colors").decoration(TextDecoration.ITALIC, false));
-        lore.add(Component.text("Use <pride:flag> to use a gradient", NamedTextColor.WHITE).decoration(TextDecoration.ITALIC, false));
-        lore.add(Component.text("Corresponding to a pride flag.", NamedTextColor.WHITE).decoration(TextDecoration.ITALIC, false));
-        lore.add(Component.text("", NamedTextColor.WHITE));
-        lore.add(Component.text("Click here to see all the implemented flags", NamedTextColor.GRAY));
-
-        inventory.setItem(15, CreateItem.createItem(miniMessage.deserialize("<!i><shadow:red:1>Other cool features"), 1, Material.COOKIE, lore));
+        itemCool();
 
         //for the api website
         List<Component> loreWeb = new ArrayList<>();
+        loreWeb.add(Component.text("If you are a player, keep in mind some tags are disabled ", NamedTextColor.GRAY).decoration(TextDecoration.ITALIC, false));
+        loreWeb.add(Component.text("For safety reason (Example: execute commands)", NamedTextColor.GRAY).decoration(TextDecoration.ITALIC, false));
+        loreWeb.add(Component.text(""));
         loreWeb.add(Component.text("Click here to got to the web editor", NamedTextColor.GRAY).decoration(TextDecoration.ITALIC, false));
         loreWeb.add(Component.text("(this can be useful if you don't understand)", NamedTextColor.GRAY).decoration(TextDecoration.ITALIC, false));
         ItemStack webItem = CreateItem.createItem(Component.text("More information").decoration(TextDecoration.ITALIC, false), 1, Material.REDSTONE_TORCH, loreWeb);
@@ -211,5 +201,42 @@ public class ExampleInventory implements InventoryHolder, Listener {
                 }
             }
         }.runTaskTimer(JustChat.getInstance(), 0, 20L);
+    }
+
+    private void itemCool(){
+
+        int randomColor = rand.nextInt(0x0, 0xFFFFFF);
+        List<Component> lore = new ArrayList<>();
+        lore.add(miniMessage.deserialize("<white><shadow:red:1>Use <shadow:blue:1>Shadow <shadow:green:1>color <shadow:yellow:1>!!!").decoration(TextDecoration.ITALIC, false));
+        lore.add(Component.text("Use <shadow:_colorNameOrHex_:[alpha_as_float]>", NamedTextColor.GRAY).decoration(TextDecoration.ITALIC, false));
+        lore.add(Component.text("(or just <shadow:colorName:1>)", NamedTextColor.GRAY).decoration(TextDecoration.ITALIC, false));
+        lore.add(Component.text(""));
+        lore.add(miniMessage.deserialize("<pride:pride>Pride flag colors").decoration(TextDecoration.ITALIC, false));
+        lore.add(miniMessage.deserialize("<pride:gay>Gay flag colors").decoration(TextDecoration.ITALIC, false));
+        lore.add(miniMessage.deserialize("<pride:lesbian>Lesbian flag colors").decoration(TextDecoration.ITALIC, false));
+        lore.add(Component.text("Use <pride:flag> to use a gradient", NamedTextColor.WHITE).decoration(TextDecoration.ITALIC, false));
+        lore.add(Component.text("Corresponding to a pride flag.", NamedTextColor.WHITE).decoration(TextDecoration.ITALIC, false));
+        lore.add(Component.text("", NamedTextColor.WHITE));
+        lore.add(Component.text("Click here to see all the implemented flags", NamedTextColor.GRAY));
+
+        inventory.setItem(15, CreateItem.createItem(miniMessage.deserialize("<!i><shadow:#"+ randomColor+":1>Other cool features"), 1, Material.COOKIE, lore));
+
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                if (inventory.getViewers().isEmpty()) {
+                    cancel();
+                }
+                else {
+                    int randomColor = rand.nextInt(0x0, 0xFFFFFF);
+                    ItemStack itemCool = inventory.getItem(15);
+                    Component name = miniMessage.deserialize("<!i><shadow:#"+ randomColor+":1>Other cool features");
+                    ItemStack finalItem = CreateItem.createItem(name,
+                            1 ,Material.COOKIE,itemCool.lore());
+                    inventory.setItem(15, finalItem);
+                }
+            }
+        }.runTaskTimer(JustChat.getInstance(), 0, 20L);
+
     }
 }

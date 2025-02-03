@@ -1,10 +1,19 @@
 name: JustChat
 version: '${version}'
 main: fr.ht06.justchat.JustChat
-api-version: '1.20'
+api-version: '1.21.4'
 author: ht06
 softdepend: ["PlaceholderAPI"]
 commands:
   justchat:
     description: a help command for the plugin JustChat
+    aliases:
+      - jc
+      - jchat
+    permission: justchat.chat
+
+permissions:
+  justchat.reload:
+    description: Can reload the config.yml
+    default: false
 
