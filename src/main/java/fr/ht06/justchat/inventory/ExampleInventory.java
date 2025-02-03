@@ -3,9 +3,10 @@ package fr.ht06.justchat.inventory;
 import fr.ht06.justchat.CreateItem;
 import fr.ht06.justchat.JustChat;
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.NamedTextColor;
-import net.kyori.adventure.text.format.TextColor;
-import net.kyori.adventure.text.format.TextDecoration;
+import net.kyori.adventure.text.TextComponent;
+import net.kyori.adventure.text.event.ClickEvent;
+import net.kyori.adventure.text.event.HoverEvent;
+import net.kyori.adventure.text.format.*;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -47,14 +48,25 @@ public class ExampleInventory implements InventoryHolder, Listener {
         //Another cool thing
         List<Component> lore = new ArrayList<>();
         lore.add(miniMessage.deserialize("<white><shadow:red:1>Use <shadow:blue:1>Shadow <shadow:green:1>color <shadow:yellow:1>!!!").decoration(TextDecoration.ITALIC, false));
-        lore.add(Component.text("Use <shadow:_colorNameOrHex_:[alpha_as_float]> (or just <shadow:colorName:1>)", NamedTextColor.GRAY).decoration(TextDecoration.ITALIC, false));
+        lore.add(Component.text("Use <shadow:_colorNameOrHex_:[alpha_as_float]>", NamedTextColor.GRAY).decoration(TextDecoration.ITALIC, false));
+        lore.add(Component.text("(or just <shadow:colorName:1>)", NamedTextColor.GRAY).decoration(TextDecoration.ITALIC, false));
         lore.add(Component.text(""));
-        lore.add(miniMessage.deserialize("<pride>Pride flag colors").decoration(TextDecoration.ITALIC, false));
-        lore.add(miniMessage.deserialize("<pride:Gay>gay flag colors").decoration(TextDecoration.ITALIC, false));
-        lore.add(miniMessage.deserialize("<pride:Lesbian>lesbian flag colors").decoration(TextDecoration.ITALIC, false));
-        lore.add(Component.text("use <pride:flag> to use a gradient corresponding to a pride flag.", NamedTextColor.WHITE).decoration(TextDecoration.ITALIC, false));
+        lore.add(miniMessage.deserialize("<pride:pride>Pride flag colors").decoration(TextDecoration.ITALIC, false));
+        lore.add(miniMessage.deserialize("<pride:gay>Gay flag colors").decoration(TextDecoration.ITALIC, false));
+        lore.add(miniMessage.deserialize("<pride:lesbian>Lesbian flag colors").decoration(TextDecoration.ITALIC, false));
+        lore.add(Component.text("Use <pride:flag> to use a gradient", NamedTextColor.WHITE).decoration(TextDecoration.ITALIC, false));
+        lore.add(Component.text("Corresponding to a pride flag.", NamedTextColor.WHITE).decoration(TextDecoration.ITALIC, false));
+        lore.add(Component.text("", NamedTextColor.WHITE));
+        lore.add(Component.text("Click here to see all the implemented flags", NamedTextColor.GRAY));
 
         inventory.setItem(15, CreateItem.createItem(miniMessage.deserialize("<!i><shadow:red:1>Other cool features"), 1, Material.COOKIE, lore));
+
+        //for the api website
+        List<Component> loreWeb = new ArrayList<>();
+        loreWeb.add(Component.text("Click here to got to the web editor", NamedTextColor.GRAY).decoration(TextDecoration.ITALIC, false));
+        loreWeb.add(Component.text("(this can be useful if you don't understand)", NamedTextColor.GRAY).decoration(TextDecoration.ITALIC, false));
+        ItemStack webItem = CreateItem.createItem(Component.text("More information").decoration(TextDecoration.ITALIC, false), 1, Material.REDSTONE_TORCH, loreWeb);
+        inventory.setItem(0, webItem);
     }
 
 
@@ -71,6 +83,37 @@ public class ExampleInventory implements InventoryHolder, Listener {
 
         if (event.getClickedInventory().getHolder() instanceof ExampleInventory) {
             event.setCancelled(true);
+
+            //for the website
+            if (event.getSlot() == 0) {
+                event.getWhoClicked().closeInventory();
+                event.getWhoClicked().sendMessage(miniMessage.deserialize("<gradient:#"+rand.nextInt(0x0, 0xFFFFFF)+":#"+rand.nextInt(0x0, 0xFFFFFF)+">Click here to go to the web editor (random gradient color :o)")
+                        .asComponent()
+                        .clickEvent(ClickEvent.openUrl("https://webui.advntr.dev/")));
+            }
+
+            else if (event.getSlot() == 15) {
+                List<String> flagsNames = new ArrayList<>(List.of("pride", "progress", "trans","bi", "pan",
+                        "nb", "lesbian", "ace", "agender", "demisexual", "genderqueer", "genderfluid", "intersex", "aro",
+                        "baker", "philly", "queer", "gay", "bigender", "demigender"));
+
+                TextComponent.Builder flagMsg = Component.text("Here are all the flags:")
+                        .decorate(TextDecoration.BOLD)
+                        .hoverEvent(HoverEvent.showText(Component.text("Hover all the flag name :)", TextColor.color(0x681C4))))
+                        .toBuilder();
+                flagMsg.append(miniMessage.deserialize("<!b> "));
+
+                for (String flag : flagsNames) {
+                    flagMsg.append(miniMessage.deserialize("<!b>"+flag)
+                            .hoverEvent(HoverEvent.showText(miniMessage.deserialize("<pride:"+flag+">These are the colors for the "+flag+" flag"))));
+
+                    flagMsg.append(miniMessage.deserialize("<!b> ").hoverEvent(HoverEvent.showText(Component.text(""))));
+                }
+
+                flagMsg.append(miniMessage.deserialize("<!b><i><gray>(hover the flag name) "));
+                event.getWhoClicked().closeInventory();
+                event.getWhoClicked().sendMessage(flagMsg.asComponent());
+            }
         }
     }
 
@@ -81,7 +124,7 @@ public class ExampleInventory implements InventoryHolder, Listener {
         List<Material> randomWool = Arrays.stream(Material.values())
                 .filter(material -> material.name().contains("WOOL")).toList();
 
-        List<Component> lore = new ArrayList<Component>();
+        List<Component> lore = new ArrayList<>();
         lore.add(Component.text("How to talk in COLOR ?")
                 .decorate(TextDecoration.BOLD)
                 .decorate(TextDecoration.UNDERLINED).decoration(TextDecoration.ITALIC, false)
