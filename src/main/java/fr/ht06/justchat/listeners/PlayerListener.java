@@ -1,36 +1,22 @@
 package fr.ht06.justchat.listeners;
 
-import fr.ht06.justchat.Main;
-import fr.ht06.justchat.commands.JustChatCommand;
-import io.papermc.paper.chat.ChatRenderer;
+import fr.ht06.justchat.JustChat;
 import io.papermc.paper.event.player.AsyncChatEvent;
-import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.ComponentLike;
 import net.kyori.adventure.text.TextComponent;
-import net.kyori.adventure.text.TextReplacementConfig;
 import net.kyori.adventure.text.format.TextColor;
 import net.kyori.adventure.text.minimessage.MiniMessage;
-import net.kyori.adventure.text.minimessage.tag.resolver.Formatter;
-import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
-import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import me.clip.placeholderapi.*;
-import org.bukkit.event.block.Action;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.inventory.InventoryCloseEvent;
-import org.bukkit.event.inventory.InventoryInteractEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -38,26 +24,13 @@ import java.util.*;
 
 public class PlayerListener implements Listener {
 
-    Main main;
-    JustChatCommand justChatCommand;
-    BukkitRunnable bukkitRunnable;
-    public Map<Player, Boolean> inventoryOpen = new HashMap<>();
-    public PlayerListener(Main main) {
+    JustChat main;
+    public PlayerListener(JustChat main) {
         this.main = main;
-    }
-    public PlayerListener(JustChatCommand justChatCommand) {
-        this.justChatCommand = justChatCommand;
-    }
-    public PlayerListener(BukkitRunnable main) {
-        this.bukkitRunnable = main;
     }
 
     @EventHandler
     public void playerPrefix(AsyncChatEvent event){
-        /*  event.viewers(= = get tout les joueur (c'est une liste)
-        for (Audience audience : event.viewers()){
-            System.out.println(audience);
-        }*/
 
         Player player = event.getPlayer();
         //String prefix = "["+PlaceholderAPI.setPlaceholders(player, "%justskyblock_test%")+"]";
@@ -68,7 +41,7 @@ public class PlayerListener implements Listener {
 
         List<String> list = new ArrayList<>();
         int i = 0;
-        String[] msgconfig = main.getConfig().getString("Message").split(" ");
+        String[] msgconfig = JustChat.getInstance().getConfig().getString("Message").split(" ");
 
         for (String s : msgconfig){
             if (s.equals("(PLAYER)")){
@@ -78,7 +51,7 @@ public class PlayerListener implements Listener {
                 i++;
 
             }
-            //si placeHolder
+            //if placeHolder
             else if (PlaceholderAPI.containsPlaceholders(s)) {
 
                 message1.append(PlaceholderAPI.setPlaceholders(player, s));
@@ -159,13 +132,6 @@ public class PlayerListener implements Listener {
                 );
             }
         }
-    }
-
-    @EventHandler
-    public void onCloseInv(InventoryCloseEvent event){
-        Player player = (Player) event.getPlayer();
-        main.inventoryClosed.put(player, false);
-        //player.sendMessage(player.getName() + " à fermé l'inv");
     }
 
 }
