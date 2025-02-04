@@ -10,6 +10,8 @@ import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
 import net.kyori.adventure.text.minimessage.tag.standard.StandardTags;
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.Color;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -41,15 +43,15 @@ public class PlayerListener implements Listener {
         Component suffix = JustChat.getInstance().getConfig().getRichMessage("suffix").replaceText(configPlayer.build());
         String suffixStr = miniMessage.serialize(suffix);
 
-
+        String messageStr = PlainTextComponentSerializer.plainText().serialize(event.message());
         //op can't do whatever they want
         if (player.isOp()){
-            message = miniMessage.deserialize(PlainTextComponentSerializer.plainText().serialize(event.message()));
+            message = miniMessage.deserialize(formatColor(messageStr));
         }
 
         //player cannot use tag like <newline> or <click> (because you can run commands with it)
         else {
-            message = getCustomMM().deserialize(PlainTextComponentSerializer.plainText().serialize(event.message()));
+            message = getCustomMM().deserialize(formatColor(messageStr));
         }
 
         //get everything before the message
@@ -66,7 +68,7 @@ public class PlayerListener implements Listener {
         }
 
         //put everything together
-        Component finalComponent = miniMessage.deserialize(finale).append(message);
+        Component finalComponent = miniMessage.deserialize(formatColor(finale)).append(message);
 
         //if the message is just <newline>, cancel
         if (message.toString().equals(Component.newline().toString())){
@@ -103,5 +105,30 @@ public class PlayerListener implements Listener {
                         .resolver(StandardTags.translatableFallback())
                         .build()
         ).build();
+    }
+
+    private String formatColor(String message){
+        return message.replace("&a", "<green>")
+                .replace("&b", "<aqua>")
+                .replace("&c", "<red>")
+                .replace("&d", "<light_purple>")
+                .replace("&e", "<yellow>")
+                .replace("&f", "<white>")
+                .replace("&0", "<black>")
+                .replace("&1", "<dark_blue>")
+                .replace("&2", "<dark_green>")
+                .replace("&3", "<dark_aqua>")
+                .replace("&4", "<dark_red>")
+                .replace("&5", "<dark_purple>")
+                .replace("&6", "<gold>")
+                .replace("&7", "<gray>")
+                .replace("&8", "<dark_gray>")
+                .replace("&9", "<blue>")
+                .replace("&l", "<bold>")
+                .replace("&n", "<u>")
+                .replace("&o", "<i>")
+                .replace("&k", "<obf>")
+                .replace("&m", "<st>")
+                .replace("&r", "<reset>");
     }
 }

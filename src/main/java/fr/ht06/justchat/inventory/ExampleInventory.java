@@ -42,6 +42,17 @@ public class ExampleInventory implements InventoryHolder, Listener {
         //for the colors
         blockColor();
 
+        //for the &
+        List<Component> components = new ArrayList<>();
+        components.add(Component.text("You can also use the & char in the chat", NamedTextColor.WHITE).decoration(TextDecoration.ITALIC, false));
+        components.add(Component.text("Example: &cHello &6everyone", NamedTextColor.WHITE).decoration(TextDecoration.ITALIC, false));
+        components.add(Component.text("= <red>Hello <gold>everyone", NamedTextColor.WHITE).decoration(TextDecoration.ITALIC, false));
+        components.add(Component.text("= &cHello <gold>everyone", NamedTextColor.WHITE).decoration(TextDecoration.ITALIC, false));
+        components.add(Component.text("= <red>Hello &6everyone", NamedTextColor.WHITE).decoration(TextDecoration.ITALIC, false));
+        components.add(miniMessage.deserialize("<white>= <red>Hello <gold>everyone").decoration(TextDecoration.ITALIC, false));
+        ItemStack ancienColor = CreateItem.createItem(Component.text("& Ancien Color system &").decoration(TextDecoration.ITALIC, false), 1, Material.COBWEB, components);
+        inventory.setItem(20, ancienColor);
+
         //decoration
         blockDecoration();
 

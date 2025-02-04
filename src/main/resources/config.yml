@@ -4,8 +4,8 @@
 #To have his message in color, a player need to be op or to have the permission : justchat.chat
 #To reload the config, a player need to be op or to have the permission : justchat.reload
 
-prefix: '<red>Prefix'
+prefix: '&cPrefix'
 suffix: '<blue>Suffix'
 
 #prefix = prefix and suffix = suffix (lol)
-format: 'prefix <green>PLAYER suffix<reset>: '  #the message is after the format
+format: 'prefix <green>PLAYER suffix&r: '  #the message is after the format
