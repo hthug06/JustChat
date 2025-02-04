@@ -1,9 +1,11 @@
 #This plugin can be used with PlaceholderAPI, you can download it Here: https://www.spigotmc.org/resources/placeholderapi.6245/
 #You can use (PLAYER) to get the name of the player
 #You can also use the Minimessage API: https://docs.advntr.dev/minimessage/format.html#pride | https://webui.advntr.dev/
+#To have his message in color, a player need to be op or to have the permission : justchat.chat
+#To reload the config, a player need to be op or to have the permission : justchat.reload
 
-prefix: '<red>(PLAYER)Prefix'
+prefix: '<red>Prefix'
 suffix: '<blue>Suffix'
 
 #prefix = prefix and suffix = suffix (lol)
-format: 'prefix <green>(PLAYER) suffix<reset>: '  #the message is after the format
+format: 'prefix <green>PLAYER suffix<reset>: '  #the message is after the format

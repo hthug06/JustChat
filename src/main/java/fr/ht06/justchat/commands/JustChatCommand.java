@@ -22,9 +22,12 @@ public class JustChatCommand implements CommandExecutor {
 
         //no args
         if (args.length == 0) {
-            if (player.hasPermission("justchat.reload")) {
+            //can reload
+            if (player.hasPermission("justchat.reload") || player.isOp()) {
                 player.sendMessage(Component.text("§c/justchat <example | reload>"));
             }
+
+            //cannot reload
             else{
                 player.sendMessage(Component.text("§c/justchat example"));
             }
@@ -34,17 +37,30 @@ public class JustChatCommand implements CommandExecutor {
 
         //args
         else {
+            //example
             if (args[0].equalsIgnoreCase("example")) {
                 player.openInventory(new ExampleInventory(false).getInventory());
             }
-            else if (args[0].equalsIgnoreCase("reload") && player.hasPermission("justchat.reload")) {
-                JustChat.getInstance().reloadConfig();
-                player.sendMessage("Config reloaded");
+
+            //reload
+            else if (args[0].equalsIgnoreCase("reload")) {
+                if (player.hasPermission("justchat.reload") || player.isOp()) {
+                    JustChat.getInstance().reloadConfig();
+                    player.sendMessage("§cConfig reloaded");
+                }
+                else {
+                    player.sendMessage("§You don't have the permission to use this command");
+                }
+
             }
+
+            //not a good command
             else {
-                if (player.hasPermission("justchat.reload")) {
+                //if can reload
+                if (player.hasPermission("justchat.reload") || player.isOp()) {
                     player.sendMessage(Component.text("§c/justchat <example | reload>"));
                 }
+                //cannot reload
                 else{
                     player.sendMessage(Component.text("§c/justchat example"));
                 }
