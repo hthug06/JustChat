@@ -10,6 +10,8 @@ public class JustChat extends JavaPlugin {
 
     @Override
     public void onEnable() {
+        Metrics metrics = new Metrics(this, 24639);
+
         //Commands
         getCommand("justChat").setExecutor(new JustChatCommand());
 
